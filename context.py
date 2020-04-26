@@ -3,23 +3,25 @@ from pip._internal.utils import encoding
 
 class Logger:
     def __init__(self, log_path, encoding='utf-8'):
-        #self.log_path = log_path
       self.log_file = open(log_path, 'a', encoding=encoding)
         
     def __enter__(self):
       self.start_time = datetime.datetime.utcnow()
-      self.stop_time = datetime.datetime.utcnow()
       return self
     def write_log(self, action):
-      #self.log_file.write(f'{datetime.datetime.utcnow()}: {action}\n')
-      self.log_file.write(f'Start: {self.start_time}: {action}\n') 
-      self.log_file.write(f'Finish: {self.stop_time}: {action}\n')
-      self.log_file.write(f'Difference: {self.stop_time - self.start_time}: {action}\n')  
+      self.log_file.write(f'{datetime.datetime.utcnow()}\n')  
     def __exit__(self, exc_type, exc_val, exc_tb):
+      self.stop_time = datetime.datetime.utcnow()
+      self.diff = self.stop_time - self.start_time
+      self.log_file.write(f'Время старта: {self.start_time}\nВремя финиша: {self.stop_time}\nКод выполнился за {self.diff}\n')       
       self.log_file.close()
-      #print(f'Время старта: {self.start_time}')
-      #print(f'Время финиша: {self.stop_time}')
-      #print(f'Код выполнился за {self.stop_time - self.start_time}')
+
+      print(f'Время старта: {self.start_time}')
+      print(f'Время финиша: {self.stop_time}')
+      print(f'Код выполнился за {self.diff}')
+    
+      
+      
 
 def zodiak():
   month = input('Введите название месяца рождения:')
@@ -57,6 +59,6 @@ def zodiak():
 
 if __name__ == '__main__':
   with Logger('Time.log') as log:
-    log.write_log(zodiak())
+    zodiak()
     
-
+    
